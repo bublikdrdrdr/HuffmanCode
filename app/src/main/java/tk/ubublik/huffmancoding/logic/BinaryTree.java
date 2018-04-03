@@ -3,9 +3,12 @@ package tk.ubublik.huffmancoding.logic;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -42,15 +45,15 @@ public class BinaryTree implements HuffmanTree{
      * extend tree if leaf char is NIT (and return {@code true})
      * or increase leaf weight by 1 (and return {@code false))
      */
-    private boolean add(Leaf leaf, Callable<Character> charDecoder) throws Exception{
-        return add(leaf, charDecoder.call());
+    private boolean add(Leaf leaf, Callable<Character> charDecoder, int weight) throws Exception{
+        return add(leaf, charDecoder.call(), weight);
     }
 
-    private boolean add(Leaf leaf, char c) {
+    private boolean add(Leaf leaf, char c, int weight) {
         if (leaf.getCharacter()==Leaf.NIT_CHAR){
-            leaf.set(null, 1,
+            leaf.set(null, weight,
                     new Leaf(Leaf.NIT_CHAR, 0),
-                    new Leaf(checkOnNitAndThrow(c), 1));
+                    new Leaf(checkOnNitAndThrow(c), weight));
             return true;
         } else {
             leaf.changeWeight(1);
@@ -59,13 +62,14 @@ public class BinaryTree implements HuffmanTree{
     }
 
     /**
-     * get Leaf by bitSet address and return number of used bits from set
+     * get Leaf by bitSet address, changing leafs weights on the way and return number of used bits from set
      */
-    private Pair<Leaf, Integer> get(StrictBitSet bitSet){
+    private Pair<Leaf, Integer> get(StrictBitSet bitSet, int weightDifference){
         Leaf currentLeaf = leaf;
         int index = 0;
         while (true){
             boolean side = bitSet.get(index++);
+            currentLeaf.changeWeight(weightDifference);
             Leaf previousLeaf = currentLeaf;
             currentLeaf = side?currentLeaf.getRight():currentLeaf.getLeft();
             if (currentLeaf==null) return new Pair<>(previousLeaf, index);
@@ -74,6 +78,25 @@ public class BinaryTree implements HuffmanTree{
 
     private void update(){
         // TODO: 02-Apr-18
+        List<List<Pair<Leaf, Leaf>>> treeList = getChildrenLeafs(Collections.singletonList(new Pair<>(leaf, null)));
+        ListIterator<List<Pair<Leaf, Leaf>>> treeRowsIterator = treeList.listIterator(treeList.size());
+        List<Pair<Leaf, Leaf>> currentRow = treeRowsIterator.previous(), parentRow;
+        while (treeRowsIterator.hasPrevious()){
+
+        }
+    }
+
+    //list/list/pair/leaf-leaf -> tree/level/child-parent
+    private List<List<Pair<Leaf, Leaf>>> getChildrenLeafs(List<Pair<Leaf, Leaf>> list){
+        List<Pair<Leaf, Leaf>> childList = new ArrayList<>();
+        for (Pair<Leaf, Leaf> pair: list){
+            if (pair.first.getLeft()!=null) childList.add(new Pair<>(pair.first.getLeft(), pair.first));
+            if (pair.first.getRight()!=null) childList.add(new Pair<>(pair.first.getRight(), pair.first));
+        }
+        if (childList.size()==0) return Collections.singletonList(list);
+        List<List<Pair<Leaf, Leaf>>> moreChildrenLeafs = getChildrenLeafs(childList);
+        moreChildrenLeafs.add(0, list);
+        return moreChildrenLeafs;
     }
 
     public Leaf find(char c){
@@ -81,22 +104,27 @@ public class BinaryTree implements HuffmanTree{
     }
 
     private Pair<Leaf, StrictBitSet> find(char c, int weightDifference){
-        Pair<Leaf, StrictBitSet> findResult = find(leaf, c);
-        if (findResult!=null && findResult.first.getCharacter()!=Leaf.NIT_CHAR) findResult.first.changeWeight(weightDifference);
-        return findResult;
+        //if (findResult!=null && findResult.first.getCharacter()!=Leaf.NIT_CHAR) findResult.first.changeWeight(weightDifference);
+        return find(leaf, c, weightDifference);
     }
 
-    private Pair<Leaf, StrictBitSet> find(Leaf leaf, char c){
+    private Pair<Leaf, StrictBitSet> find(Leaf leaf, char c, int weightDifference){
         if (leaf==null) return null;
-        if (leaf.getCharacter()==c) return new Pair<>(leaf, new StrictBitSet());
+        if (leaf.getCharacter()==c) {
+            leaf.changeWeight(weightDifference);
+            return new Pair<>(leaf, new StrictBitSet());
+        }
         if (leaf.getCharacter()==Leaf.NIT_CHAR) return null;
-        Pair<Leaf, StrictBitSet> result = find(leaf.getLeft(), c);
+        Pair<Leaf, StrictBitSet> result = find(leaf.getLeft(), c, weightDifference);
         boolean right = false;
         if (result==null){
             right = true;
-            result = find(leaf.getRight(), c);
+            result = find(leaf.getRight(), c, weightDifference);
         }
-        if (result!=null) result.second.set(result.second.getLength(), right);
+        if (result!=null) {
+            leaf.changeWeight(weightDifference);
+            result.second.set(result.second.getLength(), right);
+        }
         return result;
     }
 
@@ -127,9 +155,10 @@ public class BinaryTree implements HuffmanTree{
 
     @Override
     public char receive(StrictBitSet bitSet, int charSize) throws Exception{
-        Pair<Leaf, Integer> pair = get(bitSet);
-        if (mode==HuffmanTreeMode.DYNAMIC){
-                add(pair.first, () -> Utils.bitsToChar(bitSet, pair.second, charSize));
+        int weightDifference = mode==HuffmanTreeMode.DYNAMIC?1:0;
+        Pair<Leaf, Integer> pair = get(bitSet, weightDifference);
+        if (mode==HuffmanTreeMode.DYNAMIC) {
+            add(pair.first, () -> Utils.bitsToChar(bitSet, pair.second, charSize), weightDifference);
             update();
         }
         return pair.first.getCharacter();
@@ -138,12 +167,13 @@ public class BinaryTree implements HuffmanTree{
     @Override
     public StrictBitSet send(char c, int charSize) {
         checkOnNitAndThrow(c);
-        Pair<Leaf, StrictBitSet> pair = find(c, mode==HuffmanTreeMode.DYNAMIC?1:0);
-        if (pair==null) pair = find(Leaf.NIT_CHAR, 0);
+        int weightDifference = mode==HuffmanTreeMode.DYNAMIC?1:0;
+        Pair<Leaf, StrictBitSet> pair = find(c, weightDifference);
+        if (pair==null) pair = find(Leaf.NIT_CHAR, weightDifference);
         if (pair.first.getCharacter()==Leaf.NIT_CHAR && mode==HuffmanTreeMode.STATIC)
             throw new IllegalArgumentException(String.format("Char %c (%d) not found in static mode", c, (int)c));
         if (mode==HuffmanTreeMode.DYNAMIC){
-            boolean added = add(pair.first, c);
+            boolean added = add(pair.first, c, weightDifference);
             if (added) Utils.insertChar(pair.second, c, pair.second.getLength(), charSize);
             update();
         }
