@@ -1,5 +1,8 @@
 package tk.ubublik.huffmancoding.logic;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -9,6 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.ToDoubleFunction;
 
 /**
  * Created by Bublik on 31-Mar-18.
@@ -87,5 +91,34 @@ public class Utils {
         List<T> list = new ArrayList<>();
         list.add(value);
         return list;
+    }
+
+    public static double getEntropy(HuffmanTree huffmanTree){
+        return getEntropy(huffmanTree.getCharCodeWeightList(), huffmanTree.getTree().getWeight());
+    }
+
+    public static double getEntropy(List<HuffmanTree.CharInfo> charInfoList, double weightSum) {
+        double result = 0;
+        //charInfoList.stream().mapToDouble(element -> (element.weight/weightSum*log(2, weightSum/element.weight))).sum();
+        //unfortunately java 8 features are available only from Android API 24+
+        for (HuffmanTree.CharInfo charInfo : charInfoList)
+            result += charInfo.weight / weightSum * log(2, weightSum / charInfo.weight);
+        return result;
+    }
+
+    public static double getAverageCodeLength(HuffmanTree huffmanTree){
+        return getAverageCodeLength(huffmanTree.getCharCodeWeightList(), huffmanTree.getTree().getWeight());
+    }
+
+    public static double getAverageCodeLength(List<HuffmanTree.CharInfo> charInfoList, double weightSum){
+        double result = 0;
+        for (HuffmanTree.CharInfo charInfo : charInfoList)
+            result += (charInfo.weight / weightSum) * charInfo.bitSet.getLength();
+        return result;
+    }
+
+    //Java doesn't have log2(x) in standard library... facepalm...
+    public static double log(double base, double value){
+        return Math.log(value)/Math.log(base);
     }
 }
