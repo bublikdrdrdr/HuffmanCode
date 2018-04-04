@@ -1,9 +1,5 @@
 package tk.ubublik.huffmancoding.logic;
 
-import android.util.Pair;
-
-import java.util.BitSet;
-
 public interface HuffmanTree {
 
     enum HuffmanTreeMode{
@@ -28,4 +24,9 @@ public interface HuffmanTree {
      * ...
      */
     void setWeightMap(StrictBitSet bitSet, int charSize, int weightSize);
+
+    /**
+     * compare own tree and {@param tree} and return value "are they equal"
+     */
+    boolean compareTree(HuffmanTree tree);
 }

@@ -78,7 +78,14 @@ public class Utils {
 
     public static void insertChar(StrictBitSet bitSet, char c, int offset, int charSize){
         for (int i = 0; i < charSize; i++){
-            bitSet.set(offset+i, (c&(1<<i))!=0);
+            int and = c&(1<<i);
+            bitSet.set(offset+i, and!=0);
         }
+    }
+
+    public static <T> List<T> getSingleValueList(T value){
+        List<T> list = new ArrayList<>();
+        list.add(value);
+        return list;
     }
 }

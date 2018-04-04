@@ -13,7 +13,7 @@ import static tk.ubublik.huffmancoding.logic.Leaf.NIT_CHAR;
 
 public class LeafUnitTest {
 
-    private Random random = new Random();
+   /* private Random random = new Random();
     private char[] chars = shuffleArray(getCharArray());
     private BinaryTree binaryTree;
 
@@ -80,5 +80,5 @@ public class LeafUnitTest {
         char helper = a[i];
         a[i] = a[change];
         a[change] = helper;
-    }
+    }*/
 }

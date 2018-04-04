@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class SpeedComparisonTest {
 
-    @Test
+    /*@Test
     public void stringCharIteratorTest(){
         final int stringLength = 20000;
         System.out.println("String length: "+stringLength);
@@ -35,5 +35,5 @@ public class SpeedComparisonTest {
         nanos = System.nanoTime()-nanos;
         System.out.println("toCharArray() nanos: \t\t"+nanos);
 
-    }
+    }*/
 }

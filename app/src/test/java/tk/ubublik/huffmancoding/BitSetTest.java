@@ -8,7 +8,7 @@ import tk.ubublik.huffmancoding.logic.StrictBitSet;
 
 public class BitSetTest {
 
-    @Test
+    /*@Test
     public void bitSetValueTest(){
         BitSet bitSet = new BitSet();
         bitSet.set(1);
@@ -39,5 +39,5 @@ public class BitSetTest {
         bitSet.set(3,4);
         bitSet.clear(6);
         System.out.println(String.format("StrictBitSet: Highest set = 4, highest set(false) = 6, bitSet length = %d",bitSet.getLength()));
-    }
+    }*/
 }

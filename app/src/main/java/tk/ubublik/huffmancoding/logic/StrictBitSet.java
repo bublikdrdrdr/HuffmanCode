@@ -79,8 +79,8 @@ public class StrictBitSet implements Cloneable, Serializable{
         return bitSet.get(bitIndex);
     }
 
-    public BitSet get(int fromIndex, int toIndex) {
-        return bitSet.get(fromIndex, toIndex);
+    public StrictBitSet get(int fromIndex, int toIndex) {
+        return new StrictBitSet(bitSet.get(fromIndex, toIndex), Math.abs(toIndex-fromIndex));
     }
 
     public boolean isEmpty() {
@@ -119,5 +119,22 @@ public class StrictBitSet implements Cloneable, Serializable{
     @Override
     public StrictBitSet clone() {
         return new StrictBitSet((BitSet)bitSet.clone(), length);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++){
+            sb.append(bitSet.get(length-i-1)?1:0);
+        }
+        return "StrictBitSet{"+sb.toString()+"}";
+    }
+
+    public void invert() {
+        for (int i = 0; i < length/2; i++){
+            boolean temporaryValue = bitSet.get(i);
+            bitSet.set(i, bitSet.get(length-i-1));
+            bitSet.set(length-i-1, temporaryValue);
+        }
     }
 }
