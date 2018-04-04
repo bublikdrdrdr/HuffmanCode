@@ -17,22 +17,23 @@ public class RecursiveTreeUpdater implements TreeUpdater {
                     stillUpdating = true;
                     replaceChildren(minParent.second, minParent.first, maxChildren.first);
                     replaceChildren(maxChildren.second, maxChildren.first, minParent.first);
-                    fixWeights(tree, minParent.first);
-                    fixWeights(tree, maxChildren.first);
+                    fixWeights(tree, minParent.first, i-1);
+                    fixWeights(tree, maxChildren.first, i);
                     break;
                 }
             }
         } while (stillUpdating);
     }
 
-    private boolean fixWeights(Leaf tree, Leaf leaf){
+    private boolean fixWeights(Leaf tree, Leaf leaf, int maxDepth){
         if (tree == leaf){
             if (leaf.getCharacter()==null) leaf.fixWeight();
             return true;
         }
+        if (maxDepth<1) return false;
         boolean result = false;
-        if (tree.getLeft()!=null) result = fixWeights(tree.getLeft(), leaf);
-        result = (result || (tree.getRight()!=null && fixWeights(tree.getRight(), leaf)));
+        if (tree.getLeft()!=null) result = fixWeights(tree.getLeft(), leaf, maxDepth-1);
+        result = (result || (tree.getRight()!=null && fixWeights(tree.getRight(), leaf, maxDepth-1)));
         if (result && tree.getCharacter()==null) tree.fixWeight();
         return result;
     }

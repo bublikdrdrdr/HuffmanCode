@@ -20,7 +20,12 @@ public class HuffmanTreeUnitTest {
         HuffmanTree huffmanTree1 = new BinaryTree(HuffmanTree.HuffmanTreeMode.DYNAMIC);
         HuffmanTree huffmanTree2 = new BinaryTree(HuffmanTree.HuffmanTreeMode.DYNAMIC);
         int charSize = Character.SIZE;
-        String sendString = "uganda warrior";
+        //String sendString = "uganda warrior";
+        String sendString = "24890w8593246790218yqgwdhjxmolmlkcms,lx,ascmkldngkjafdslmasklfajkdmaskf" +
+                "nskafjsaklfjmask,xlas,xl,kslzkdlskdlksqwertyuiop[]asdfghjkl;zxcvbnm,./uganda warrio" +
+                "r asdlkjasd askdjasd askldjaskldjaskldjaskldjkasnda dkjasdlkjasld asdjasldjlaksdjla" +
+                "ksjdlksdgheroihioewtuksnvkmsnvjnc asldkjasckmopfmribnjvnlksmckasjlkasd aslkdjaslkdj" +
+                "amcnlknclknclkasns adlasndlkjaslkdnasljfnirjiawnfclkan sldknasldkjalcnlkcnx.,cnmxnksdj";
         StringBuilder receiver = new StringBuilder();
         for (char c: sendString.toCharArray()){
             StrictBitSet bitSet = huffmanTree1.send(c, charSize);
