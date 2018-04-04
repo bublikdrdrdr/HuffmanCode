@@ -109,6 +109,11 @@ public class StrictBitSet implements Cloneable, Serializable{
         length = newLength;
     }
 
+    public StrictBitSet add(boolean value){
+        set(length, value);
+        return this;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof StrictBitSet)) return false;

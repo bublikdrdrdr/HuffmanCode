@@ -1,14 +1,8 @@
 package tk.ubublik.huffmancoding.logic;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -184,6 +178,21 @@ public class BinaryTree implements HuffmanTree {
     @Override
     public boolean compareTree(HuffmanTree tree) {
         return tree instanceof BinaryTree && leaf.equals(((BinaryTree) tree).leaf);
+    }
+
+    @Override
+    public Leaf getTree() {
+        return leaf;
+    }
+
+    @Override
+    public List<CharInfo> getCharCodeWeightList() {
+        return  TreeInfoBuilder.toList(leaf);
+    }
+
+    @Override
+    public Map<Character, Pair<StrictBitSet, Integer>> getCharCodeWeightMap() {
+        return TreeInfoBuilder.toMap(leaf);
     }
 
     private char checkOnNitAndThrow(char c) {

@@ -1,9 +1,27 @@
 package tk.ubublik.huffmancoding.logic;
 
+import java.util.List;
+import java.util.Map;
+
 public interface HuffmanTree {
 
     enum HuffmanTreeMode{
         STATIC, DYNAMIC
+    }
+
+    class CharInfo{
+        public char character;
+        public StrictBitSet bitSet;
+        public int weight;
+
+        public CharInfo() {
+        }
+
+        public CharInfo(char character, StrictBitSet bitSet, int weight) {
+            this.character = character;
+            this.bitSet = bitSet;
+            this.weight = weight;
+        }
     }
 
     /**
@@ -29,4 +47,19 @@ public interface HuffmanTree {
      * compare own tree and {@param tree} and return value "are they equal"
      */
     boolean compareTree(HuffmanTree tree);
+
+    /**
+     * get main component of whole tree
+     */
+    Leaf getTree();
+
+    /**
+     * get list of used characters, their codes and weights
+     */
+    List<CharInfo> getCharCodeWeightList();
+
+    /**
+     * get map of used characters, their codes and weights
+     */
+    Map<Character, Pair<StrictBitSet, Integer>> getCharCodeWeightMap();
 }
