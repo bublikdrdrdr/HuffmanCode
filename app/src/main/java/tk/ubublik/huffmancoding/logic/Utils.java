@@ -121,4 +121,29 @@ public class Utils {
     public static double log(double base, double value){
         return Math.log(value)/Math.log(base);
     }
+
+    public static List<List<Pair<Leaf, Leaf>>> getTreeTable(Leaf tree){
+        return getTreeTable(getSingleValueList(new Pair<>(tree, null)));
+    }
+
+    public static List<List<Pair<Leaf, Leaf>>> getTreeTable(List<Pair<Leaf, Leaf>> list) {
+        List<Pair<Leaf, Leaf>> childList = new ArrayList<>();
+        for (Pair<Leaf, Leaf> pair : list) {
+            if (pair.first.getLeft() != null)
+                childList.add(new Pair<>(pair.first.getLeft(), pair.first));
+            if (pair.first.getRight() != null)
+                childList.add(new Pair<>(pair.first.getRight(), pair.first));
+        }
+        if (childList.size() == 0) return Utils.getSingleValueList(list);
+        List<List<Pair<Leaf, Leaf>>> moreChildrenLeafs = getTreeTable(childList);
+        moreChildrenLeafs.add(0, list);
+        return moreChildrenLeafs;
+    }
+
+    public static int getMaxTreeDepth(Leaf leaf){
+        int maxResult = 0;
+        if (leaf.getLeft()!=null) maxResult = getMaxTreeDepth(leaf.getLeft());
+        if (leaf.getRight()!=null) maxResult = Math.max(maxResult, getMaxTreeDepth(leaf.getRight()));
+        return ++maxResult;
+    }
 }

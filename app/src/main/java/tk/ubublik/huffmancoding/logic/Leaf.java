@@ -1,6 +1,8 @@
 package tk.ubublik.huffmancoding.logic;
 
 import android.annotation.SuppressLint;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -9,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -16,7 +19,7 @@ import java.util.Objects;
  */
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Leaf implements Cloneable{
+public class Leaf implements Cloneable, Parcelable{
 
     public static final char NIT_CHAR = 0;
 
@@ -146,4 +149,37 @@ public class Leaf implements Cloneable{
         boolean l1LeftNull = leaf1.left == null, l1RightNull = leaf1.right == null, l2LeftNull = leaf2.left == null, l2RightNull = leaf2.right == null;
         return l1LeftNull == l2LeftNull && l1RightNull == l2RightNull && equals(leaf1.left, leaf2.left) && equals(leaf1.right, leaf2.right);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(character != null ? (int) character : Integer.MAX_VALUE);
+        dest.writeInt(weight);
+        dest.writeParcelable(left, flags);
+        dest.writeParcelable(right, flags);
+    }
+
+    private Leaf(Parcel in) {
+        int tmpCharacter = in.readInt();
+        character = tmpCharacter != Integer.MAX_VALUE ? (char) tmpCharacter : null;
+        weight = in.readInt();
+        left = in.readParcelable(Leaf.class.getClassLoader());
+        right = in.readParcelable(Leaf.class.getClassLoader());
+    }
+
+    public static final Creator<Leaf> CREATOR = new Creator<Leaf>() {
+        @Override
+        public Leaf createFromParcel(Parcel in) {
+            return new Leaf(in);
+        }
+
+        @Override
+        public Leaf[] newArray(int size) {
+            return new Leaf[size];
+        }
+    };
 }

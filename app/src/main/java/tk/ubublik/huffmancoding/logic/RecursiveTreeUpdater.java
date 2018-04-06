@@ -2,6 +2,8 @@ package tk.ubublik.huffmancoding.logic;
 
 import java.util.Map;
 
+import static tk.ubublik.huffmancoding.logic.Utils.getMaxTreeDepth;
+
 public class RecursiveTreeUpdater implements TreeUpdater {
 
     @Override
@@ -44,13 +46,6 @@ public class RecursiveTreeUpdater implements TreeUpdater {
         } else {
             parentLeaf.setRight(replaceLeaf);
         }
-    }
-
-    private int getMaxTreeDepth(Leaf leaf){
-        int maxResult = 0;
-        if (leaf.getLeft()!=null) maxResult = getMaxTreeDepth(leaf.getLeft());
-        if (leaf.getRight()!=null) maxResult = Math.max(maxResult, getMaxTreeDepth(leaf.getRight()));
-        return ++maxResult;
     }
 
     private Pair<Leaf, Leaf> getTheMostWeightFromDepth(Leaf leaf, int depth, boolean max){

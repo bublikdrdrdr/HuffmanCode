@@ -1,5 +1,8 @@
 package tk.ubublik.huffmancoding.logic;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +14,7 @@ import java.util.concurrent.Callable;
  * Created by Bublik on 31-Mar-18.
  */
 
-public class BinaryTree implements HuffmanTree {
+public class BinaryTree implements HuffmanTree, Parcelable {
 
     private Leaf leaf = new Leaf(Leaf.NIT_CHAR, 0);
     private final HuffmanTreeMode mode;
@@ -32,6 +35,23 @@ public class BinaryTree implements HuffmanTree {
         this.mode = mode;
         this.leaf = leaf;
     }
+
+    protected BinaryTree(Parcel in) {
+        this(HuffmanTreeMode.valueOf(in.readString()));
+        leaf = in.readParcelable(Leaf.class.getClassLoader());
+    }
+
+    public static final Creator<BinaryTree> CREATOR = new Creator<BinaryTree>() {
+        @Override
+        public BinaryTree createFromParcel(Parcel in) {
+            return new BinaryTree(in);
+        }
+
+        @Override
+        public BinaryTree[] newArray(int size) {
+            return new BinaryTree[size];
+        }
+    };
 
     /**
      * extend tree if leaf char is NIT (and return {@code true})
@@ -200,4 +220,18 @@ public class BinaryTree implements HuffmanTree {
             throw new IllegalArgumentException(String.format("Illegal new char value: %c, (%d) (NIT_CHAR)", c, (int) c));
         return c;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mode.name());
+        dest.writeParcelable(leaf, flags);
+    }
+
+    //TODO
+
 }
