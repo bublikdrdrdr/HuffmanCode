@@ -74,7 +74,7 @@ public class TreeRendererView extends View implements View.OnTouchListener {
         textColor = a.getColor(R.styleable.TreeRendererView_textColor, Color.BLACK);
         branchThickness = a.getDimension(R.styleable.TreeRendererView_branchThickness, dpToPx(2));
         leafSize = a.getDimension(R.styleable.TreeRendererView_leafSize, dpToPx(25));
-        textSize = a.getDimension(R.styleable.TreeRendererView_textSize, spToPx(18));
+        textSize = a.getDimension(R.styleable.TreeRendererView_textSize, spToPx(20));
         treePadding = new PointF(a.getDimension(R.styleable.TreeRendererView_leafHorizontalPadding, dpToPx(50)),
                 a.getDimension(R.styleable.TreeRendererView_leafVerticalPadding, dpToPx(50)));
         a.recycle();
@@ -147,10 +147,14 @@ public class TreeRendererView extends View implements View.OnTouchListener {
         fillPaint.setColor(textColor);
         outlinePaint.setColor(getOutlineTextColor(textColor));
         outlinePaint.setStyle(Paint.Style.STROKE);
-        outlinePaint.setStrokeWidth(textSize/20);
+        outlinePaint.setStrokeWidth(textSize/30);
         outlinePaint.setTextSize(textSize);
-        fillPaint.setTextSize(textSize*1.1f);
+        fillPaint.setTextSize(textSize*1.0f);
         outlinePaint.setFakeBoldText(true);
+        fillPaint.setFakeBoldText(true);
+        outlinePaint.setTextAlign(Paint.Align.CENTER);
+        fillPaint.setTextAlign(Paint.Align.CENTER);
+        outlinePaint.setStrokeJoin(Paint.Join.ROUND);
 
         PointF textPosition = new PointF(screenCoordinates.x, screenCoordinates.y - ((fillPaint.descent() + fillPaint.ascent()) / 2));
         canvas.drawText(String.valueOf(leaf.weight), textPosition.x, textPosition.y, fillPaint);
