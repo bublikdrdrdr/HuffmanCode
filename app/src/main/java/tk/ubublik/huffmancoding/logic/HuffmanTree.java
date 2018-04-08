@@ -1,9 +1,11 @@
 package tk.ubublik.huffmancoding.logic;
 
+import android.os.Parcelable;
+
 import java.util.List;
 import java.util.Map;
 
-public interface HuffmanTree {
+public interface HuffmanTree extends Parcelable{
 
     enum HuffmanTreeMode{
         STATIC, DYNAMIC

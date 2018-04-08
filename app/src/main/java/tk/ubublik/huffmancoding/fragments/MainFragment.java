@@ -3,13 +3,14 @@ package tk.ubublik.huffmancoding.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import tk.ubublik.huffmancoding.R;
 import tk.ubublik.huffmancoding.logic.BinaryTree;
@@ -20,18 +21,20 @@ public class MainFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private HuffmanTree huffmanTree = new BinaryTree();
+    private static final String huffmanTreeKey = "htk";
 
     public MainFragment() {
-        // Required empty public constructor
-    }
-    // TODO: Rename and change types and number of parameters
-    public static MainFragment newInstance() {
-        return new MainFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            HuffmanTree huffmanTree = savedInstanceState.getParcelable(huffmanTreeKey);
+            if (huffmanTree!=null) {
+                this.huffmanTree = huffmanTree;
+            }
+        }
     }
 
     @Override
@@ -39,7 +42,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        ((EditText)view.findViewById(R.id.inputDataEditText)).addTextChangedListener(new TextWatcher() {
+        ((EditText) view.findViewById(R.id.inputDataEditText)).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -52,10 +55,17 @@ public class MainFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                huffmanTree.send(s.charAt(s.length()-1), Character.SIZE);
+                if (s.length() > 0) huffmanTree.send(s.charAt(s.length() - 1), Character.SIZE);
+                ((TextView) view.findViewById(R.id.statsTextView)).setText(String.format("%d", huffmanTree.getCharCodeWeightList().size()));
             }
         });
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(huffmanTreeKey, huffmanTree);
     }
 
     public void onButtonPressed(Uri uri) {
@@ -64,7 +74,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    public HuffmanTree getTree(){
+    public HuffmanTree getTree() {
         return huffmanTree;
     }
 

@@ -10,6 +10,10 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -19,6 +23,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 
 import tk.ubublik.huffmancoding.logic.Leaf;
 import tk.ubublik.huffmancoding.logic.Pair;
@@ -39,7 +44,7 @@ public class TreeRendererView extends View implements View.OnTouchListener {
     private int textColor;
     private PointF treePadding;
 
-    private List<VisualizedLeaf> list = new ArrayList<>();
+    private ArrayList<VisualizedLeaf> list = new ArrayList<>();
 
     private PointF currentPointerPosition = new PointF();
     private PointF screenCenterPoint = new PointF();
@@ -60,7 +65,6 @@ public class TreeRendererView extends View implements View.OnTouchListener {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
-        // Load attributes
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.TreeRendererView, defStyle, 0);
         branchColor = a.getColor(R.styleable.TreeRendererView_branchColor, Color.BLACK);
@@ -105,10 +109,8 @@ public class TreeRendererView extends View implements View.OnTouchListener {
             }
             if (nodeFitsOnScreen(current)){
                 drawNode(canvas, current);
-                System.out.println(String.format("Node rendered: x=%f, y=%f", toScreenCoordinates(current.position).x, toScreenCoordinates(current.position).y ));
             }
         }
-
         // Draw the text.
         /*canvas.drawText(mExampleString,
                 paddingLeft + (contentWidth - mTextWidth) / 2,
@@ -120,6 +122,7 @@ public class TreeRendererView extends View implements View.OnTouchListener {
 
     private void drawBranch(Canvas canvas, VisualizedLeaf leaf){
         Paint paint = new Paint();
+        paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setStrokeWidth(branchThickness);
         paint.setColor(branchColor);
@@ -130,6 +133,7 @@ public class TreeRendererView extends View implements View.OnTouchListener {
 
     private void drawNode(Canvas canvas, VisualizedLeaf leaf){
         Paint fillPaint = new Paint();
+        fillPaint.setAntiAlias(true);
         int color = charLeafColor;
         if (leaf.character==null) color = nullLeafColor;
         else if (leaf.character==Leaf.NIT_CHAR) color = nitLeafColor;
@@ -139,6 +143,7 @@ public class TreeRendererView extends View implements View.OnTouchListener {
         canvas.drawCircle(screenCoordinates.x, screenCoordinates.y, leafSize, fillPaint);
 
         Paint outlinePaint = new Paint();
+        outlinePaint.setAntiAlias(true);
         fillPaint.setColor(textColor);
         outlinePaint.setColor(getOutlineTextColor(textColor));
         outlinePaint.setStyle(Paint.Style.STROKE);
@@ -183,9 +188,6 @@ public class TreeRendererView extends View implements View.OnTouchListener {
             rightBottom.y = swap;
         }
         return (leftTop.x <= getWidth() && rightBottom.x >= 0 && leftTop.y <= getHeight() && rightBottom.y >= 0);
-        /*return (between(leftTop.x, 0, getWidth())||between(rightBottom.x, 0, getWidth())) &&
-                (between(leftTop.y, 0, getHeight()) || between(rightBottom.y, 0, getHeight()));
-                */
     }
 
     private boolean pointOnScreen(PointF point) {
@@ -209,13 +211,12 @@ public class TreeRendererView extends View implements View.OnTouchListener {
     }
 
     public void setTree(Leaf tree) {
-        list = VisualizedLeaf.treeToList(tree, treePadding);
+        list = (tree==null)?new ArrayList<>():VisualizedLeaf.treeToList(tree, treePadding);
     }
 
     public void toFirstLeaf(){
         currentPointerPosition.set(0,0);
     }
-
 
     private PointF actionDownPointer;
     private PointF actionDownEvent;
@@ -233,5 +234,34 @@ public class TreeRendererView extends View implements View.OnTouchListener {
         }
         invalidate();
         return true;
+    }
+
+    public Bundle writeToBundle(){
+        Bundle bundle = new Bundle();
+        bundle.putInt("branchColor", branchColor);
+        bundle.putInt("nitLeafColor", nitLeafColor);
+        bundle.putInt("charLeafColor", charLeafColor);
+        bundle.putInt("nullLeafColor", nullLeafColor);
+        bundle.putFloat("branchThickness", branchThickness);
+        bundle.putFloat("leafSize", leafSize);
+        bundle.putFloat("textSize", textSize);
+        bundle.putParcelable("treePadding", treePadding);
+        bundle.putParcelable("currentPointerPosition", currentPointerPosition);
+        bundle.putParcelableArrayList("list", list);
+        return bundle;
+    }
+
+    public void readFromBundle(@Nullable Bundle bundle){
+        if (bundle==null) return;
+        branchColor = bundle.getInt("branchColor", branchColor);
+        nitLeafColor = bundle.getInt("nitLeafColor", nitLeafColor);
+        charLeafColor = bundle.getInt("charLeafColor", charLeafColor);
+        nullLeafColor = bundle.getInt("nullLeafColor", nullLeafColor);
+        branchThickness = bundle.getFloat("branchThickness", branchThickness);
+        leafSize = bundle.getFloat("leafSize", leafSize);
+        textSize = bundle.getFloat("textSize", textSize);
+        treePadding = AppUtils.valueOrDefault(bundle.getParcelable("treePadding"), treePadding);
+        currentPointerPosition = AppUtils.valueOrDefault(bundle.getParcelable("currentPointerPosition"), currentPointerPosition);
+        list = AppUtils.valueOrDefault(bundle.getParcelableArrayList("list"), list);
     }
 }

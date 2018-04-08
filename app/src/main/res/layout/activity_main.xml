@@ -7,9 +7,8 @@
     android:layout_height="match_parent"
     tools:context="tk.ubublik.huffmancoding.MainActivity">
 
-    <fragment
+    <FrameLayout
         android:id="@+id/fragment"
-        android:name="tk.ubublik.huffmancoding.fragments.MainFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"

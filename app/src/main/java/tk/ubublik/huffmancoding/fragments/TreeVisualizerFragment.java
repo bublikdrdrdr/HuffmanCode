@@ -3,30 +3,25 @@ package tk.ubublik.huffmancoding.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import tk.ubublik.huffmancoding.AppUtils;
 import tk.ubublik.huffmancoding.R;
 import tk.ubublik.huffmancoding.TreeRendererView;
 import tk.ubublik.huffmancoding.logic.HuffmanTree;
 import tk.ubublik.huffmancoding.logic.Leaf;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TreeVisualizerFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TreeVisualizerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TreeVisualizerFragment extends Fragment {
 
     private static final String ARG_TREE = "tree";
+    private static final String TREE_VIEW_STATE = "tvs";
 
     private OnFragmentInteractionListener mListener;
+    private Leaf tree;
 
     public TreeVisualizerFragment() {
         // Required empty public constructor
@@ -45,10 +40,19 @@ public class TreeVisualizerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
+        if (savedInstanceState == null && getArguments() != null) {
+            tree = getArguments().getParcelable(ARG_TREE);
+            getArguments().remove(ARG_TREE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(ARG_TREE, tree);
+        if (getView()!=null){
+            outState.putBundle(TREE_VIEW_STATE, ((TreeRendererView)getView().findViewById(R.id.treeRendererView)).writeToBundle());
+        }
     }
 
     @Override
@@ -56,12 +60,11 @@ public class TreeVisualizerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tree_visualizer, container, false);
-        if (getArguments()!=null) {
-            Object tree = getArguments().getParcelable(ARG_TREE);
-            if (tree instanceof Leaf)
-                ((TreeRendererView) view.findViewById(R.id.treeRendererView)).setTree((Leaf) tree);
-        }
-
+        tree = AppUtils.valueOrDefault(AppUtils.tryOrNull(() -> savedInstanceState.getParcelable(ARG_TREE)), tree);
+        TreeRendererView treeRendererView = view.findViewById(R.id.treeRendererView);
+        treeRendererView.setTree(tree);
+        tree = null;
+        treeRendererView.readFromBundle(AppUtils.tryOrNull(() -> savedInstanceState.getBundle(TREE_VIEW_STATE)));
         return view;
     }
 
@@ -100,7 +103,14 @@ public class TreeVisualizerFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public TreeVisualizerFragment setTree(Leaf tree) {
+        if (getView() != null)
+            ((TreeRendererView) getView().findViewById(R.id.treeRendererView)).setTree(tree);
+        else
+            this.tree = tree;
+        return this;
     }
 }
