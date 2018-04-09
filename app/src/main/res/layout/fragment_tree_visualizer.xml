@@ -1,23 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragments.TreeVisualizerFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/treeFragmentModeSpinner"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:src="@drawable/doge_background" />
+        android:entries="@array/huffmanTreeMode"
+        android:padding="16dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/dogeLabel"
+            android:scaleType="centerCrop"
+            android:src="@drawable/doge_background" />
 
     <tk.ubublik.huffmancoding.TreeRendererView
         android:id="@+id/treeRendererView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    </FrameLayout>
 
-</FrameLayout>
+</LinearLayout>

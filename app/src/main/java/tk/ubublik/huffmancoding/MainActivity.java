@@ -5,24 +5,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 
-import tk.ubublik.huffmancoding.fragments.AboutFragment;
+import tk.ubublik.huffmancoding.fragments.StatsFragment;
 import tk.ubublik.huffmancoding.fragments.MainFragment;
 import tk.ubublik.huffmancoding.fragments.TreeVisualizerFragment;
-import tk.ubublik.huffmancoding.logic.BinaryTree;
 import tk.ubublik.huffmancoding.logic.HuffmanTree;
-import tk.ubublik.huffmancoding.logic.Leaf;
 
 public class MainActivity extends AppCompatActivity
         implements TreeVisualizerFragment.OnFragmentInteractionListener,
         MainFragment.OnFragmentInteractionListener,
-        AboutFragment.OnFragmentInteractionListener {
+        StatsFragment.OnFragmentInteractionListener {
 
     private BottomNavigationView.OnNavigationItemSelectedListener navigationListener = item -> {
         try {
@@ -31,7 +28,7 @@ public class MainActivity extends AppCompatActivity
                     setFragment(getFragment(MainFragment.class));
                     return true;
                 case R.id.navigation_about:
-                    setFragment(getFragment(AboutFragment.class));
+                    setFragment(getFragment(StatsFragment.class));
                     return true;
                 case R.id.navigation_tree:
                     setFragment(getFragment(TreeVisualizerFragment.class, null).setTree(AppUtils.tryOrNull(() -> getTree().getTree())));
@@ -85,11 +82,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setFragment(Fragment fragment) {
-        Fragment current = getSupportFragmentManager().findFragmentById(R.id.fragment);
-        if (current != null) getSupportFragmentManager().beginTransaction().hide(current).commit();
+        for (Fragment added: getSupportFragmentManager().getFragments()){
+            if (added.isAdded() && added.isVisible()) getSupportFragmentManager().beginTransaction().hide(added).commit();
+        }
         if (fragment != null) {
-            if (!fragment.isAdded())
+            if (!fragment.isAdded()) {
                 getSupportFragmentManager().beginTransaction().add(R.id.fragment, fragment, fragment.getClass().getCanonicalName()).commit();
+            }
             getSupportFragmentManager().beginTransaction().show(fragment).commit();
         }
     }
