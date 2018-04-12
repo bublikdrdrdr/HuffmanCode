@@ -1,138 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="8dp"
-    android:orientation="vertical"
     tools:context=".fragments.MainFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <EditText
-        android:id="@+id/inputDataEditText"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="text"
-        android:inputType="textPersonName"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/statsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:visibility="gone" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/inputEditTextLayout"
-                android:layout_width="match_parent"
+            <CheckBox
+                android:id="@+id/showCodeAssociationCheckBox"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="-10dp"
-                app:errorEnabled="true">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/inputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="input data" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Switch
-                android:id="@+id/encodeSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:checked="true"
-                android:text="Synchronize encode data" />
+                android:text="@string/show_char_codes_label" />
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/encodedEditTextLayout"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/clearButton"
+                style="@android:style/Widget.Material.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:errorEnabled="false">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/encodedEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="encoded data"
-                    android:lines="4"
-                    android:singleLine="false" />
-
-            </android.support.design.widget.TextInputLayout>
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="decoded data"
-                android:textColor="@color/colorAccent" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:longClickable="true"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam bibendum lorem in iaculis bibendum. Donec in nibh vel felis auctor pellentesque quis sed velit. Sed ac ligula tempus mi pretium finibus a vel eros. Aenean venenatis dapibus mi. Cras id rutrum dolor, quis sollicitudin magna. In tincidunt mi id purus viverra, sed dignissim ipsum volutpat. Nam et augue dolor. Quisque congue, magna a pulvinar elementum, nulla est porta elit, nec pretium nibh massa in magna. Mauris lacinia turpis ac nibh fringilla rutrum. Phasellus diam ante, blandit et cursus et, molestie semper risus. Phasellus quis lectus purus. Mauris ut suscipit purus. Sed quis tempus nibh. Praesent a est nec enim laoreet blandit. Quisque fermentum viverra imperdiet." />
-
-            <TextView
-                android:id="@+id/outputLabelTextView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="statistic"
-                android:textColor="@color/colorAccent" />
-
-            <TableLayout
-                android:id="@+id/statsTable"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:stretchColumns="*"
-                android:orientation="vertical">
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TextView" />
-
-                    <TextView
-                        android:id="@+id/textView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TextView" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </TableLayout>
-
+                android:text="@string/clear_button_label" />
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/inputEditTextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/inputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:hint="@string/input_data_label"
+                android:lines="4" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/encoded_data"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/encodedDataTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="false"
+            android:longClickable="true" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/decoded_data"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/decodedDataTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="false"
+            android:longClickable="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/statistic"
+            android:textColor="@color/colorAccent" />
+
+      <!--  <TableLayout
+            android:id="@+id/statsTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:stretchColumns="*">
+
+        </TableLayout>-->
+
+        <FrameLayout
+            android:id="@+id/statsTableContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </FrameLayout>
+
+    </LinearLayout>
+</ScrollView>

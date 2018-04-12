@@ -128,11 +128,19 @@ public class StrictBitSet implements Cloneable, Serializable{
 
     @Override
     public String toString() {
+        return toString(true);
+    }
+
+    public String toString(boolean includeClassName) {
+        return toString(includeClassName, false);
+    }
+
+    public String toString(boolean includeClassName, boolean inverted){
         StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++){
-            sb.append(bitSet.get(length-i-1)?1:0);
+            sb.append(bitSet.get(inverted?i:length-i-1)?1:0);
         }
-        return "StrictBitSet{"+sb.toString()+"}";
+        return includeClassName?("StrictBitSet{"+sb.toString()+"}"):sb.toString();
     }
 
     public void invert() {

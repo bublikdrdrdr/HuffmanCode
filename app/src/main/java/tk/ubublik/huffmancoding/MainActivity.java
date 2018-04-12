@@ -16,10 +16,7 @@ import tk.ubublik.huffmancoding.fragments.MainFragment;
 import tk.ubublik.huffmancoding.fragments.TreeVisualizerFragment;
 import tk.ubublik.huffmancoding.logic.HuffmanTree;
 
-public class MainActivity extends AppCompatActivity
-        implements TreeVisualizerFragment.OnFragmentInteractionListener,
-        MainFragment.OnFragmentInteractionListener,
-        StatsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView.OnNavigationItemSelectedListener navigationListener = item -> {
         try {
@@ -27,11 +24,15 @@ public class MainActivity extends AppCompatActivity
                 case R.id.navigation_home:
                     setFragment(getFragment(MainFragment.class));
                     return true;
-                case R.id.navigation_about:
-                    setFragment(getFragment(StatsFragment.class));
+                case R.id.navigation_stats:
+                    setFragment(getFragment(StatsFragment.class)).setTables(
+                            AppUtils.treeToStatsTable(getTree(HuffmanTree.HuffmanTreeMode.DYNAMIC)),
+                            AppUtils.treeToStatsTable(getTree(HuffmanTree.HuffmanTreeMode.STATIC)));
                     return true;
                 case R.id.navigation_tree:
-                    setFragment(getFragment(TreeVisualizerFragment.class, null).setTree(AppUtils.tryOrNull(() -> getTree().getTree())));
+                    setFragment(getFragment(TreeVisualizerFragment.class, null)).setTrees(
+                            AppUtils.tryOrNull(() -> getTree(HuffmanTree.HuffmanTreeMode.DYNAMIC).getTree()),
+                            AppUtils.tryOrNull(() -> getTree(HuffmanTree.HuffmanTreeMode.STATIC).getTree()));
                     return true;
             }
             return false;
@@ -41,8 +42,8 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
-    private HuffmanTree getTree() {
-        return AppUtils.tryOrNull(() -> getFragment(MainFragment.class).getTree());
+    private HuffmanTree getTree(HuffmanTree.HuffmanTreeMode treeMode) {
+        return AppUtils.tryOrNull(() -> getFragment(MainFragment.class).getTree(treeMode));
     }
 
     private <C extends Fragment> C getFragment(Class<C> fragmentClass) {
@@ -76,12 +77,7 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    private void setFragment(Fragment fragment) {
+    private <F extends Fragment> F setFragment(F fragment) {
         for (Fragment added: getSupportFragmentManager().getFragments()){
             if (added.isAdded() && added.isVisible()) getSupportFragmentManager().beginTransaction().hide(added).commit();
         }
@@ -91,5 +87,6 @@ public class MainActivity extends AppCompatActivity
             }
             getSupportFragmentManager().beginTransaction().show(fragment).commit();
         }
+        return fragment;
     }
 }

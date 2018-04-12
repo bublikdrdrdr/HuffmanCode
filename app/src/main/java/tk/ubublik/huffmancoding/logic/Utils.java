@@ -94,7 +94,7 @@ public class Utils {
     }
 
     public static double getEntropy(HuffmanTree huffmanTree){
-        return getEntropy(huffmanTree.getCharCodeWeightList(), huffmanTree.getTree().getWeight());
+        return getEntropy(huffmanTree.getCharCodeWeightList(false), huffmanTree.getTree().getWeight());
     }
 
     public static double getEntropy(List<HuffmanTree.CharInfo> charInfoList, double weightSum) {
@@ -102,12 +102,12 @@ public class Utils {
         //charInfoList.stream().mapToDouble(element -> (element.weight/weightSum*log(2, weightSum/element.weight))).sum();
         //unfortunately java 8 features are available only from Android API 24+
         for (HuffmanTree.CharInfo charInfo : charInfoList)
-            result += charInfo.weight / weightSum * log(2, weightSum / charInfo.weight);
+            result += (charInfo.weight / weightSum) * log(2, weightSum / charInfo.weight);
         return result;
     }
 
     public static double getAverageCodeLength(HuffmanTree huffmanTree){
-        return getAverageCodeLength(huffmanTree.getCharCodeWeightList(), huffmanTree.getTree().getWeight());
+        return getAverageCodeLength(huffmanTree.getCharCodeWeightList(false), huffmanTree.getTree().getWeight());
     }
 
     public static double getAverageCodeLength(List<HuffmanTree.CharInfo> charInfoList, double weightSum){

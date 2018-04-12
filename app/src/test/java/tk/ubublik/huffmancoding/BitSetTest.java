@@ -8,6 +8,15 @@ import tk.ubublik.huffmancoding.logic.StrictBitSet;
 
 public class BitSetTest {
 
+    @Test
+    public void test(){
+        StrictBitSet bitSet = new StrictBitSet();
+        bitSet.add(true);
+        bitSet.add(true);
+        bitSet.add(false);
+        System.out.println(bitSet.toString(false, false));
+    }
+
     /*@Test
     public void bitSetValueTest(){
         BitSet bitSet = new BitSet();

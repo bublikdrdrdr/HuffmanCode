@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 
 import tk.ubublik.huffmancoding.AppUtils;
 import tk.ubublik.huffmancoding.R;
@@ -17,23 +19,23 @@ import tk.ubublik.huffmancoding.logic.Leaf;
 
 public class TreeVisualizerFragment extends Fragment {
 
-    private static final String ARG_TREE = "tree";
-    private static final String TREE_VIEW_STATE = "tvs";
+    private static final String ARG_DYNAMIC_TREE = "adt";
+    private static final String ARG_STATIC_TREE = "ast";
+    private static final String DYNAMIC_TREE_VIEW_STATE = "dtvs";
+    private static final String STATIC_TREE_VIEW_STATE = "stvs";
 
-    private OnFragmentInteractionListener mListener;
-    private Leaf tree;
+    private Leaf dynamicTree;
+    private Leaf staticTree;
 
     public TreeVisualizerFragment() {
-        // Required empty public constructor
     }
 
-    public static TreeVisualizerFragment newInstance(Leaf tree) {
+    public static TreeVisualizerFragment newInstance(Leaf dynamicTree, Leaf staticTree) {
         TreeVisualizerFragment fragment = new TreeVisualizerFragment();
         Bundle args = new Bundle();
-        if (tree!=null) {
-            args.putParcelable(ARG_TREE, tree);
-            fragment.setArguments(args);
-        }
+        if (dynamicTree!=null) args.putParcelable(ARG_DYNAMIC_TREE, dynamicTree);
+        if (dynamicTree!=null) args.putParcelable(ARG_STATIC_TREE, staticTree);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -41,76 +43,100 @@ public class TreeVisualizerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null && getArguments() != null) {
-            tree = getArguments().getParcelable(ARG_TREE);
-            getArguments().remove(ARG_TREE);
+            dynamicTree = getArguments().getParcelable(DYNAMIC_TREE_VIEW_STATE);
+            staticTree = getArguments().getParcelable(STATIC_TREE_VIEW_STATE);
+            getArguments().remove(DYNAMIC_TREE_VIEW_STATE);
+            getArguments().remove(STATIC_TREE_VIEW_STATE);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(ARG_TREE, tree);
+        outState.putParcelable(ARG_STATIC_TREE, staticTree);
+        outState.putParcelable(ARG_DYNAMIC_TREE, dynamicTree);
         if (getView()!=null){
-            outState.putBundle(TREE_VIEW_STATE, ((TreeRendererView)getView().findViewById(R.id.treeRendererView)).writeToBundle());
+            outState.putBundle(DYNAMIC_TREE_VIEW_STATE, ((TreeRendererView)getView().findViewById(R.id.dynamicTreeRendererView)).writeToBundle());
+            outState.putBundle(STATIC_TREE_VIEW_STATE, ((TreeRendererView)getView().findViewById(R.id.staticTreeRendererView)).writeToBundle());
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tree_visualizer, container, false);
-        tree = AppUtils.valueOrDefault(AppUtils.tryOrNull(() -> savedInstanceState.getParcelable(ARG_TREE)), tree);
-        TreeRendererView treeRendererView = view.findViewById(R.id.treeRendererView);
-        treeRendererView.setTree(tree);
-        tree = null;
-        treeRendererView.readFromBundle(AppUtils.tryOrNull(() -> savedInstanceState.getBundle(TREE_VIEW_STATE)));
+        dynamicTree = AppUtils.valueOrDefault(dynamicTree, AppUtils.tryOrNull(() -> savedInstanceState.getParcelable(ARG_DYNAMIC_TREE)));
+        staticTree = AppUtils.valueOrDefault(staticTree, AppUtils.tryOrNull(() -> savedInstanceState.getParcelable(ARG_STATIC_TREE)));
+        TreeRendererView dynamicTreeRenderView = view.findViewById(R.id.dynamicTreeRendererView);
+        TreeRendererView staticTreeRenderView = view.findViewById(R.id.staticTreeRendererView);
+        dynamicTreeRenderView.setTree(dynamicTree);
+        staticTreeRenderView.setTree(staticTree);
+        dynamicTree = null;
+        staticTree = null;
+        dynamicTreeRenderView.readFromBundle(AppUtils.tryOrNull(() -> savedInstanceState.getBundle(DYNAMIC_TREE_VIEW_STATE)));
+        staticTreeRenderView.readFromBundle(AppUtils.tryOrNull(() -> savedInstanceState.getBundle(STATIC_TREE_VIEW_STATE)));
+        Spinner treeFragmentModeSpinner = view.findViewById(R.id.treeFragmentModeSpinner);
+        treeFragmentModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setRenderViewVisible(position==0? HuffmanTree.HuffmanTreeMode.DYNAMIC: HuffmanTree.HuffmanTreeMode.STATIC);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        setRenderViewVisible(getCurrentTreeMode());
+        view.findViewById(R.id.rootButton).setOnClickListener(v -> {
+            TreeRendererView treeRendererView = getRendererViewByMode(getCurrentTreeMode());
+            if (treeRendererView != null) {
+                treeRendererView.toFirstLeaf();
+                treeRendererView.invalidate();
+            }
+        });
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    private void setRenderViewVisible(HuffmanTree.HuffmanTreeMode mode){
+        View view, dynamicView, staticView;
+        if ((view = getView())==null) return;
+        (dynamicView = view.findViewById(R.id.dynamicTreeRendererView)).setVisibility(View.GONE);
+        (staticView = view.findViewById(R.id.staticTreeRendererView)).setVisibility(View.GONE);
+        switch (mode){
+            case STATIC:
+                staticView.setVisibility(View.VISIBLE);
+                break;
+            case DYNAMIC:
+                dynamicView.setVisibility(View.VISIBLE);
+                break;
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+    private TreeRendererView getRendererViewByMode(HuffmanTree.HuffmanTreeMode mode) {
+        switch (mode) {
+            case STATIC:
+                return getView().findViewById(R.id.staticTreeRendererView);
+            case DYNAMIC:
+                return getView().findViewById(R.id.dynamicTreeRendererView);
+            default:
+                return null;
+        }
+    }
+
+    public void setTrees(Leaf dynamicTree, Leaf staticTree) {
+        if (getView() != null) {
+            ((TreeRendererView) getView().findViewById(R.id.staticTreeRendererView)).setTree(staticTree);
+            ((TreeRendererView) getView().findViewById(R.id.dynamicTreeRendererView)).setTree(dynamicTree);
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            this.dynamicTree = dynamicTree;
+            this.staticTree = staticTree;
         }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
-
-    public TreeVisualizerFragment setTree(Leaf tree) {
-        if (getView() != null)
-            ((TreeRendererView) getView().findViewById(R.id.treeRendererView)).setTree(tree);
-        else
-            this.tree = tree;
-        return this;
+    private HuffmanTree.HuffmanTreeMode getCurrentTreeMode() {
+        if (getView() == null) return null;
+        return ((Spinner) getView().findViewById(R.id.treeFragmentModeSpinner)).
+                getSelectedItemPosition() == 0 ? HuffmanTree.HuffmanTreeMode.DYNAMIC : HuffmanTree.HuffmanTreeMode.STATIC;
     }
 }

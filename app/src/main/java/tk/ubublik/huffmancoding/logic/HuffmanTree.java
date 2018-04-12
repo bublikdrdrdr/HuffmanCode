@@ -45,6 +45,8 @@ public interface HuffmanTree extends Parcelable{
      */
     void setWeightMap(StrictBitSet bitSet, int charSize, int weightSize);
 
+    void setWeightMap(Map<Character, Integer> map);
+
     /**
      * compare own tree and {@param tree} and return value "are they equal"
      */
@@ -58,10 +60,10 @@ public interface HuffmanTree extends Parcelable{
     /**
      * get list of used characters, their codes and weights
      */
-    List<CharInfo> getCharCodeWeightList();
+    List<CharInfo> getCharCodeWeightList(boolean includeNIT);
 
     /**
      * get map of used characters, their codes and weights
      */
-    Map<Character, Pair<StrictBitSet, Integer>> getCharCodeWeightMap();
+    Map<Character, Pair<StrictBitSet, Integer>> getCharCodeWeightMap(boolean includeNIT);
 }

@@ -1,7 +1,10 @@
 package tk.ubublik.huffmancoding;
 
+import android.graphics.Color;
+
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import tk.ubublik.huffmancoding.logic.Utils;
@@ -26,4 +29,5 @@ public class ExampleUnitTest {
             System.out.println(String.format("Entry key: %c, value: %d", entry.getKey(), entry.getValue()));
         }
     }*/
+
 }

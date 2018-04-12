@@ -141,7 +141,17 @@ public class TreeRendererView extends View implements View.OnTouchListener {
         fillPaint.setColor(color);
         PointF screenCoordinates = toScreenCoordinates(leaf.position);
         canvas.drawCircle(screenCoordinates.x, screenCoordinates.y, leafSize, fillPaint);
+        drawText(canvas, screenCoordinates, String.valueOf(leaf.weight));
+        if (leaf.character!=null){
+            screenCoordinates.y += leafSize;
+            String text = leaf.character==Leaf.NIT_CHAR?"NIT":String.valueOf(leaf.character);
+            drawText(canvas, screenCoordinates, text);
+        }
+    }
 
+    private void drawText(Canvas canvas, PointF screenCoordinates, String text){
+        Paint fillPaint = new Paint();
+        fillPaint.setAntiAlias(true);
         Paint outlinePaint = new Paint();
         outlinePaint.setAntiAlias(true);
         fillPaint.setColor(textColor);
@@ -157,9 +167,8 @@ public class TreeRendererView extends View implements View.OnTouchListener {
         outlinePaint.setStrokeJoin(Paint.Join.ROUND);
 
         PointF textPosition = new PointF(screenCoordinates.x, screenCoordinates.y - ((fillPaint.descent() + fillPaint.ascent()) / 2));
-        canvas.drawText(String.valueOf(leaf.weight), textPosition.x, textPosition.y, fillPaint);
-        canvas.drawText(String.valueOf(leaf.weight), textPosition.x, textPosition.y, outlinePaint);
-        // TODO: 05-Apr-18 continue
+        canvas.drawText(text, textPosition.x, textPosition.y, fillPaint);
+        canvas.drawText(text, textPosition.x, textPosition.y, outlinePaint);
     }
 
     private int getOutlineTextColor(int textColor){

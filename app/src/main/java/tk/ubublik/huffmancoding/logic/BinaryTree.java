@@ -192,6 +192,11 @@ public class BinaryTree implements HuffmanTree, Parcelable {
             int w = Utils.bitsToInt(bitSet, i * (charSize + weightSize) + charSize, weightSize);
             map.put(c, w);
         }
+        setWeightMap(map);
+    }
+
+    @Override
+    public void setWeightMap(Map<Character, Integer> map) {
         leaf = getFromMap(map);
     }
 
@@ -206,13 +211,13 @@ public class BinaryTree implements HuffmanTree, Parcelable {
     }
 
     @Override
-    public List<CharInfo> getCharCodeWeightList() {
-        return  TreeInfoBuilder.toList(leaf);
+    public List<CharInfo> getCharCodeWeightList(boolean includeNIT) {
+        return  TreeInfoBuilder.toList(leaf, includeNIT);
     }
 
     @Override
-    public Map<Character, Pair<StrictBitSet, Integer>> getCharCodeWeightMap() {
-        return TreeInfoBuilder.toMap(leaf);
+    public Map<Character, Pair<StrictBitSet, Integer>> getCharCodeWeightMap(boolean includeNIT) {
+        return TreeInfoBuilder.toMap(leaf, includeNIT);
     }
 
     private char checkOnNitAndThrow(char c) {
