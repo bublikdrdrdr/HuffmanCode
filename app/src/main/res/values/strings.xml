@@ -3,7 +3,8 @@
     <string name="title_home">Home</string>
     <string name="title_tree">Tree</string>
     <string name="title_stats">Stats</string>
-    
+    <string name="title_about">About</string>
+
     <string name="inputBackspaceErrorMessage">You can only add text</string>
     <string name="inputInsertErrorMessage">You can\'t insert text</string>
 
@@ -33,6 +34,20 @@
     <string name="decoded_data">decoded data</string>
     <string name="statistic">statistic</string>
     <string name="copiedMessage">Copied to clipboard</string>
+
+    <string name="about">by Vadym Borys\n
+    IMST1.2.1\n
+    Lab Teleinformatyka\n
+    12.04.2018</string>
+    <string name="list_ot_functions">List of functions:\n\n
+        - type or paste text to send\n
+        - clear data\n
+        - show text to encoded data relation\n
+        - copy encoded data (long press)\n
+        - show stats: algorithm times, efficiency, entropy, average code size of dynamic and static modes of Huffman coding\n
+        - visualize trees (static/dynamic)\n
+        - show table of char properties (for static and dynamic modes)
+    </string>
 
 
 </resources>

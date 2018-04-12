@@ -1,13 +1,19 @@
 package tk.ubublik.huffmancoding.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import tk.ubublik.huffmancoding.AppUtils;
@@ -95,7 +101,41 @@ public class TreeVisualizerFragment extends Fragment {
                 treeRendererView.invalidate();
             }
         });
+        initBackgroundImage(view);
         return view;
+    }
+
+    private void initBackgroundImage(View view){
+        view.findViewById(R.id.treeBackgroundImage).getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            try{
+                ImageView imageView;
+                try{
+                    imageView = getView().findViewById(R.id.treeBackgroundImage);
+                } catch (Exception e){
+                    imageView = view.findViewById(R.id.treeBackgroundImage);
+                }
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inScaled = false;
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.doge, options);
+                Point size = new Point(imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
+                double bitmapRatio = bitmap.getWidth()/(double)bitmap.getHeight();
+                double viewRatio = size.x/(double)size.y;
+                if (bitmapRatio>viewRatio){
+                    bitmap = Bitmap.createBitmap(bitmap,
+                            bitmap.getWidth()/2-size.x/2,
+                            0,
+                            bitmap.getWidth()/2+size.x/2,
+                            bitmap.getHeight());
+                } else {
+                    bitmap = Bitmap.createBitmap(bitmap,
+                            0,
+                            bitmap.getHeight()/2-size.y/2,
+                            bitmap.getWidth(),
+                            bitmap.getHeight()/2+size.y/2);
+                }
+                imageView.setImageBitmap(bitmap);
+            } catch (Exception | Error ignored){}
+        });
     }
 
     private void setRenderViewVisible(HuffmanTree.HuffmanTreeMode mode){

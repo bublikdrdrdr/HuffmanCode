@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import java.util.concurrent.Callable;
 
+import tk.ubublik.huffmancoding.fragments.AboutFragment;
 import tk.ubublik.huffmancoding.fragments.StatsFragment;
 import tk.ubublik.huffmancoding.fragments.MainFragment;
 import tk.ubublik.huffmancoding.fragments.TreeVisualizerFragment;
@@ -33,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
                     setFragment(getFragment(TreeVisualizerFragment.class, null)).setTrees(
                             AppUtils.tryOrNull(() -> getTree(HuffmanTree.HuffmanTreeMode.DYNAMIC).getTree()),
                             AppUtils.tryOrNull(() -> getTree(HuffmanTree.HuffmanTreeMode.STATIC).getTree()));
+                    return true;
+                case R.id.navigation_about:
+                    setFragment(getFragment(AboutFragment.class));
                     return true;
             }
             return false;
