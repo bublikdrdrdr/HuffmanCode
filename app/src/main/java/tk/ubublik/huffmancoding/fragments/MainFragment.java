@@ -1,5 +1,7 @@
 package tk.ubublik.huffmancoding.fragments;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -20,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Map;
 
@@ -29,6 +32,8 @@ import tk.ubublik.huffmancoding.HuffmanTreeLogic;
 import tk.ubublik.huffmancoding.R;
 import tk.ubublik.huffmancoding.logic.HuffmanTree;
 import tk.ubublik.huffmancoding.logic.Pair;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class MainFragment extends Fragment {
 
@@ -69,6 +74,7 @@ public class MainFragment extends Fragment {
         view.findViewById(R.id.clearButton).setOnClickListener(v -> ((TextInputEditText)getView().findViewById(R.id.inputEditText)).setText(""));
         showEncodedData(view, coloredMode(view));
         showStats(view, logic.getStats());
+        setCopyListener(view);
         return view;
     }
 
@@ -76,6 +82,17 @@ public class MainFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(logicKey, logic);
+    }
+
+    private void setCopyListener(View view){
+        view.findViewById(R.id.encodedDataTextView).setOnLongClickListener(v -> {
+            Toast.makeText(getContext(), getString(R.string.copiedMessage), Toast.LENGTH_SHORT).show();
+            ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(CLIPBOARD_SERVICE);
+            String string = ((TextView)v).getText().toString();
+            if (clipboard==null) return false;
+            clipboard.setPrimaryClip(ClipData.newPlainText("Encoded data", string));
+            return true;
+        });
     }
 
     public HuffmanTree getTree(HuffmanTree.HuffmanTreeMode treeMode) {

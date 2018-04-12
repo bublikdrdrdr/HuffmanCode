@@ -143,7 +143,7 @@ public class TreeRendererView extends View implements View.OnTouchListener {
         canvas.drawCircle(screenCoordinates.x, screenCoordinates.y, leafSize, fillPaint);
         drawText(canvas, screenCoordinates, String.valueOf(leaf.weight));
         if (leaf.character!=null){
-            screenCoordinates.y += leafSize;
+            screenCoordinates.y += leafSize+textSize/2;
             String text = leaf.character==Leaf.NIT_CHAR?"NIT":String.valueOf(leaf.character);
             drawText(canvas, screenCoordinates, text);
         }
@@ -178,8 +178,8 @@ public class TreeRendererView extends View implements View.OnTouchListener {
     }
 
     private boolean nodeFitsOnScreen(VisualizedLeaf leaf){
-        PointF leftTop = new PointF(leaf.position.x-leafSize/2, leaf.position.y-leafSize/2);
-        PointF rightBottom = new PointF(leftTop.x+leafSize, leftTop.y+leafSize);
+        PointF leftTop = new PointF(leaf.position.x-leafSize, leaf.position.y-leafSize);
+        PointF rightBottom = new PointF(leftTop.x+leafSize*2, leftTop.y+leafSize*2);
         return fitsOnScreen(leftTop, rightBottom);
     }
 

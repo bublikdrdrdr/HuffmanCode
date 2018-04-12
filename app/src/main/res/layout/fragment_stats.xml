@@ -25,6 +25,7 @@
         android:textStyle="bold" />
 
     <include
+        android:id="@+id/statsTableHeader"
         layout="@layout/stats_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

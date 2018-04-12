@@ -171,7 +171,7 @@ public class HuffmanTreeLogic implements Parcelable {
 
     @SuppressLint("DefaultLocale")
     private String formatDouble(double value) {
-        return String.format("%.1f", value);
+        return String.format("%.4f", value);
     }
 
     @SuppressLint("DefaultLocale")

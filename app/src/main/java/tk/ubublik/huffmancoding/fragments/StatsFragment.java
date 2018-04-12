@@ -11,10 +11,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import tk.ubublik.huffmancoding.AppUtils;
 import tk.ubublik.huffmancoding.R;
 import tk.ubublik.huffmancoding.StatsAdapter;
 import tk.ubublik.huffmancoding.StatsLeaf;
@@ -68,7 +70,36 @@ public class StatsFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+        setSortListeners(view.findViewById(R.id.statsTableHeader));
         return view;
+    }
+
+    private void setSortListeners(View view){
+        int[] viewIds = new int[]{R.id.charTextView, R.id.charNumberTextView, R.id.countTextView, R.id.probabilityTextView, R.id.codeTextView};
+        for (int i : viewIds){
+            TextView currentView = view.findViewById(i);
+            currentView.setClickable(true);
+            final AppUtils.SortByColumn sort;
+            if (i==R.id.charTextView || i == R.id.charNumberTextView)
+                sort = AppUtils.SortByColumn.CHAR;
+            else if (i==R.id.countTextView || i == R.id.probabilityTextView)
+                sort = AppUtils.SortByColumn.WEIGHT;
+            else sort = AppUtils.SortByColumn.CODE;
+            currentView.setOnClickListener(v -> sort(sort, getView()));
+        };
+    }
+
+    private AppUtils.SortByColumn previousSelected;
+    private void sort(AppUtils.SortByColumn column, View view){
+        boolean desc = false;
+        if (column.equals(previousSelected)){
+            desc = true;
+            previousSelected = null;
+        } else {
+            previousSelected = column;
+        }
+        AppUtils.sortStats(getCurrentList(view), column, desc);
+        statsAdapter.notifyDataSetChanged();
     }
 
     @Override

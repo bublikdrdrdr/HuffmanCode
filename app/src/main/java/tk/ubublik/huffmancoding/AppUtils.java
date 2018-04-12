@@ -49,7 +49,8 @@ public class AppUtils {
                     res = Integer.compare(o1.count, o2.count);
                     break;
                 case CODE:
-                    res = o1.code.compareTo(o2.code);
+                    res = Integer.compare(o1.code.length(), o2.code.length());
+                    if (res==0) res = o1.code.compareTo(o2.code);
                     break;
             }
             return res*(desc?-1:1);

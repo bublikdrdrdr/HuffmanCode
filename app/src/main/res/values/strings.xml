@@ -7,35 +7,32 @@
     <string name="inputBackspaceErrorMessage">You can only add text</string>
     <string name="inputInsertErrorMessage">You can\'t insert text</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dogeLabel">doge</string>
-    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam bibendum lorem in iaculis bibendum. Donec in nibh vel felis auctor pellentesque quis sed velit. Sed ac ligula tempus mi pretium finibus a vel eros. Aenean venenatis dapibus mi. Cras id rutrum dolor, quis sollicitudin magna. In tincidunt mi id purus viverra, sed dignissim ipsum volutpat. Nam et augue dolor. Quisque congue, magna a pulvinar elementum, nulla est porta elit, nec pretium nibh massa in magna. Mauris lacinia turpis ac nibh fringilla rutrum. Phasellus diam ante, blandit et cursus et, molestie semper risus. Phasellus quis lectus purus. Mauris ut suscipit purus. Sed quis tempus nibh. Praesent a est nec enim laoreet blandit. Quisque fermentum viverra imperdiet.</string>
-    <!--<string name="statsTableCaption">Table of <strike>Heroes</strike> Chars</string>-->
     <string name="statsTableCaption">Table of chars</string>
     <array name="huffmanTreeMode">
         <item>Dynamic</item>
         <item>Static</item>
     </array>
 
-    <string name="dynamicSend">dynamicSend</string>
-    <string name="dynamicReceive">dynamicReceive</string>
-    <string name="dynamicSummarySend">dynamicSummarySend</string>
-    <string name="staticBuildTree">staticBuildTree</string>
-    <string name="staticSend">staticSend</string>
-    <string name="staticReceive">staticReceive</string>
-    <string name="dynamicEntropy">dynamicEntropy</string>
-    <string name="staticEntropy">staticEntropy</string>
-    <string name="dynamicAverage">dynamicAverage</string>
-    <string name="staticAverage">staticAverage</string>
-    <string name="dynamicCodeCompression">dynamicCodeCompression</string>
-    <string name="staticCodeCompression">staticCodeCompression</string>
+    <string name="dynamicSend">Dynamic send</string>
+    <string name="dynamicReceive">Dynamic receive</string>
+    <string name="dynamicSummarySend">Summary dynamic send</string>
+    <string name="staticBuildTree">Build static tree from string</string>
+    <string name="staticSend">Static send</string>
+    <string name="staticReceive">Static receive</string>
+    <string name="dynamicEntropy">Dynamic entropy</string>
+    <string name="staticEntropy">Static entropy</string>
+    <string name="dynamicAverage">Dynamic average</string>
+    <string name="staticAverage">Static average</string>
+    <string name="dynamicCodeCompression">Dynamic code compression</string>
+    <string name="staticCodeCompression">Static code compression</string>
     <string name="show_char_codes_label">Show char codes association</string>
     <string name="clear_button_label">clear</string>
     <string name="input_data_label">input data</string>
     <string name="encoded_data">encoded data</string>
     <string name="decoded_data">decoded data</string>
     <string name="statistic">statistic</string>
+    <string name="copiedMessage">Copied to clipboard</string>
 
 
 </resources>

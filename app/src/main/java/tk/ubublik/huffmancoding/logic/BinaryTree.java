@@ -28,7 +28,7 @@ public class BinaryTree implements HuffmanTree, Parcelable {
     }
 
     public BinaryTree(Map<Character, Integer> map) {
-        this(getFromMap(map), HuffmanTreeMode.STATIC);
+        this(getFromMap(map, false), HuffmanTreeMode.STATIC);
     }
 
     private BinaryTree(Leaf leaf, HuffmanTreeMode mode) {
@@ -125,9 +125,9 @@ public class BinaryTree implements HuffmanTree, Parcelable {
         return result;
     }
 
-    private static Leaf getFromMap(Map<Character, Integer> map) {
+    private static Leaf getFromMap(Map<Character, Integer> map, boolean includeNIT) {
         List<Leaf> list = new ArrayList<>();
-        list.add(new Leaf(Leaf.NIT_CHAR, 0));
+        if (includeNIT) list.add(new Leaf(Leaf.NIT_CHAR, 0));
         Set<Map.Entry<Character, Integer>> set = Utils.sortMapValues(map, false);
         for (Map.Entry<Character, Integer> entry : set) {
             if (entry.getKey() == Leaf.NIT_CHAR)
@@ -197,7 +197,7 @@ public class BinaryTree implements HuffmanTree, Parcelable {
 
     @Override
     public void setWeightMap(Map<Character, Integer> map) {
-        leaf = getFromMap(map);
+        leaf = getFromMap(map, mode==HuffmanTreeMode.DYNAMIC);
     }
 
     @Override
