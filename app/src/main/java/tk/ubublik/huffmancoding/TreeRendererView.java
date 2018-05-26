@@ -111,11 +111,6 @@ public class TreeRendererView extends View implements View.OnTouchListener {
                 drawNode(canvas, current);
             }
         }
-        // Draw the text.
-        /*canvas.drawText(mExampleString,
-                paddingLeft + (contentWidth - mTextWidth) / 2,
-                paddingTop + (contentHeight + mTextHeight) / 2,
-                mTextPaint);*/
     }
 
 

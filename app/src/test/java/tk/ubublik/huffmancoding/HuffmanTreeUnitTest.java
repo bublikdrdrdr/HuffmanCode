@@ -31,7 +31,7 @@ public class HuffmanTreeUnitTest {
             StrictBitSet bitSet = huffmanTree1.send(c, charSize);
             char receivedChar = huffmanTree2.receive(bitSet, charSize);
             if (!huffmanTree1.compareTree(huffmanTree2)){
-                System.out.println("well.. fuck");
+                System.out.println("well.. f**k");
             }
             receiver.append(receivedChar);
         }

@@ -126,7 +126,9 @@ public class Leaf implements Cloneable, Parcelable{
     }
 
     public boolean fixWeight() throws UnsupportedOperationException{
-        if (character!=null) throw new UnsupportedOperationException(String.format("Can't fix weight of last leaf with char value %s", character==NIT_CHAR?"NIT":Character.toString(character)));
+        if (character!=null) throw new UnsupportedOperationException(
+                String.format("Can't fix weight of last leaf with char value %s",
+                        character==NIT_CHAR?"NIT":Character.toString(character)));
         int oldWeight = weight;
         weight = 0;
         if (left!=null) weight += left.getWeight();
